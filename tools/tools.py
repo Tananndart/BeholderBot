@@ -1,12 +1,13 @@
-from aiogram.types import Message
-import re
 
+def get_text_without_command(message_text: str):
+    """
+    Возвращает текст сообщения без введенной команды.
+    /day good -> good
+    :param message_text: текст сообщения.
+    :return: Текст сообщения без указанной команды.
+    """
+    if message_text.startswith("/"):
+        prefix_length = len(message_text.split()[0])
+        return message_text[prefix_length:].strip()
 
-def get_message_text(message: Message):
-    text = message.text
-    if text.startswith("/"):
-        prefix_length = len(text.split()[0])
-        return text[prefix_length:].strip()
-
-    return text
-
+    return message_text

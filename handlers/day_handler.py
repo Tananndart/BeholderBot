@@ -4,10 +4,10 @@ from aiogram import Bot, Router
 from aiogram.filters import Command, ExceptionTypeFilter
 from aiogram.types import ErrorEvent, Message
 
-from tools.tools import get_message_text
+from repository.repository_factory import get_day_repository
+from tools.tools import get_text_without_command
 
 day_router = Router()
-DAY_STATUSES = ["good", "norm", "bad"]
 
 
 class InvalidDayStatus(Exception):
@@ -16,13 +16,19 @@ class InvalidDayStatus(Exception):
 
 @day_router.message(Command("day"))
 async def handle_day(message: Message):
-    day_status = get_message_text(message)
+    day_status = get_text_without_command(message.text)
     if not day_status:
         raise InvalidDayStatus(f"Day status can't be None!")
 
+    day_statuses = {"good": 1, "norm": 0, "bad": -1}
     day_status = str(day_status).lower()
-    if day_status not in DAY_STATUSES:
-        raise InvalidDayStatus(f"Day status {day_status} not in {DAY_STATUSES}")
+    if day_status not in day_statuses.keys():
+        raise InvalidDayStatus(f"Day status {day_status} not in {day_statuses.keys()}")
+
+    day_repository = get_day_repository()
+    day_date = message.date.date()
+    day_status = day_statuses[day_status]
+    day_repository.save_day(day_date, day_status)
 
     await message.reply(text=f"Your Day status = {day_status}")
 

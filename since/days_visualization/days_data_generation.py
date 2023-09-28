@@ -1,11 +1,11 @@
 """
 Generate random csv days data format:
 Date,Status
-2023-08-01,Good
-2023-08-02,Good
-2023-08-03,Norm
+2023-08-01,1
+2023-08-02,0
+2023-08-03,0
 ...
-2023-08-31,Bad
+2023-08-31,-1
 """
 
 if __name__ == "__main__":
