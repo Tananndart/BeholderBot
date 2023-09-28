@@ -28,6 +28,7 @@ if __name__ == "__main__":
     # set dots
     for i in range(len(dates)):
         plt.scatter(dates[i], statuses[i], color='black', marker='o')
+        plt.text(dates[i], statuses[i], dates[i], ha='center', va='bottom')
 
     plt.xticks(rotation=90)
     plt.show()

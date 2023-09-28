@@ -7,6 +7,7 @@ from aiogram.enums import ParseMode
 
 from env import BOT_TOKEN
 from handlers.day_handler import day_router
+from handlers.graph_handler import graph_router
 
 
 async def main() -> None:
@@ -14,6 +15,7 @@ async def main() -> None:
 
     dp = Dispatcher()
     dp.include_router(day_router)
+    dp.include_router(graph_router)
 
     await dp.start_polling(bot)
 

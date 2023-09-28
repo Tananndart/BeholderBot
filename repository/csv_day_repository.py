@@ -1,6 +1,8 @@
 import csv
 import os
-from datetime import date
+from datetime import date, datetime
+from typing import List, Any
+
 from repository.day_repository import DayRepository
 
 
@@ -17,4 +19,22 @@ class CsvDayRepository(DayRepository):
         with open(self.csv_file_path, mode="a", newline='') as f:
             writer = csv.writer(f)
             writer.writerow([day_date, day_status])
-            #f.write(f"{day_date},{day_status}\n")
+
+    def get_all(self, with_headers: bool = False) -> List[List[Any]]:
+        dates = []
+        statuses = []
+
+        with open(self.csv_file_path, "r", newline='') as file:
+            reader = csv.reader(file)
+
+            if not with_headers:
+                next(reader)
+
+            for row in reader:
+                day_date = datetime.strptime(row[0], "%Y-%m-%d").date()
+                day_status = int(row[1])
+
+                dates.append(day_date)
+                statuses.append(day_status)
+
+        return [dates, statuses]
