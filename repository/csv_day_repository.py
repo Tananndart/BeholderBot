@@ -2,6 +2,7 @@ import csv
 import os
 from datetime import date, datetime
 from typing import List, Any
+import pandas as pd
 
 from repository.day_repository import DayRepository
 
@@ -16,9 +17,16 @@ class CsvDayRepository(DayRepository):
                 writer.writerow(["Date", "Status"])
 
     def save_day(self, day_date: date, day_status: int) -> None:
-        with open(self.csv_file_path, mode="a", newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([day_date, day_status])
+        df = pd.read_csv(self.csv_file_path)
+
+        day_date_str = str(day_date)
+        if day_date_str in df['Date'].values:
+            index = df[df['Date'] == day_date_str].index[0]
+            df.loc[index, 'Status'] = day_status
+        else:
+            df.loc[len(df.index)] = [day_date_str, day_status]
+
+        df.to_csv(self.csv_file_path, index=False)
 
     def get_all(self, with_headers: bool = False) -> List[List[Any]]:
         dates = []

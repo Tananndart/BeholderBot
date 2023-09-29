@@ -1,7 +1,7 @@
 import csv
 import os
 import pytest
-from datetime import datetime
+from datetime import datetime, date
 from repository.csv_day_repository import CsvDayRepository
 
 
@@ -12,6 +12,10 @@ TEST_CSV_PATH = r"days_data_test.csv"
 def before_tests():
     if os.path.exists(TEST_CSV_PATH):
         os.remove(TEST_CSV_PATH)
+
+
+def _to_date(text: str) -> date:
+    return datetime.strptime(text, "%Y-%m-%d").date()
 
 
 def test_first_init() -> None:
@@ -43,11 +47,10 @@ def test_save_day() -> None:
     day_repository = CsvDayRepository(TEST_CSV_PATH)
 
     day_date_str = "2023-08-10"
-    day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
     day_status = 1
 
     # Act
-    day_repository.save_day(day_date, day_status)
+    day_repository.save_day(_to_date(day_date_str), day_status)
 
     # Assert
     with open(TEST_CSV_PATH, mode="r", newline='') as f:
@@ -56,6 +59,37 @@ def test_save_day() -> None:
         first_row = next(reader)
         assert (day_date_str == first_row[0])
         assert (day_status == int(first_row[1]))
+
+
+def test_save_day_if_day_already_exist() -> None:
+    """
+    Сохраняет уже существующий день в csv.
+    Должен найти перезаписать запись с уже сохраненным днем.
+    """
+    # Arrange
+    day_repository = CsvDayRepository(TEST_CSV_PATH)
+
+    already_save_day = ("2023-08-10", 0)
+    new_save_day = ("2023-08-10", 1)
+
+    test_days = [("2023-08-09", 0), already_save_day, ("2023-08-11", 0)]
+    for day in test_days:
+        day_repository.save_day(_to_date(day[0]), day[1])
+
+    # Act
+    day_repository.save_day(_to_date(new_save_day[0]), new_save_day[1])
+
+    # Assert
+    already_save_day_find = False
+    with open(TEST_CSV_PATH, mode="r", newline='') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        for row in reader:
+            if new_save_day[0] == row[0]:
+                already_save_day_find = True
+                assert (new_save_day[1] == int(row[1]))
+
+    assert already_save_day
 
 
 def test_get_all():
