@@ -5,29 +5,34 @@ from datetime import datetime
 from repository.csv_day_repository import CsvDayRepository
 
 
+TEST_CSV_PATH = r"days_data_test.csv"
+
+
+@pytest.fixture(autouse=True)
+def before_tests():
+    if os.path.exists(TEST_CSV_PATH):
+        os.remove(TEST_CSV_PATH)
+
+
 def test_first_init() -> None:
     """
     Проверить первичную инициализацию репозитория.
     Должен быть создан новый csv файл в двумя колонками: Date,Status.
     """
     # Arrange
-    csv_path = r"days_data_test.csv"
     first_col_str = "Date"
     second_col_str = "Status"
 
     # Act
-    CsvDayRepository(csv_path)
+    CsvDayRepository(TEST_CSV_PATH)
 
     # Assert
-    assert (os.path.isfile(csv_path))
-    with open(csv_path, mode="r", newline='') as f:
+    assert (os.path.isfile(TEST_CSV_PATH))
+    with open(TEST_CSV_PATH, mode="r", newline='') as f:
         reader = csv.reader(f)
         headers = reader.__next__()
         assert (first_col_str == headers[0])
         assert (second_col_str == headers[1])
-
-    # Clean
-    os.remove(csv_path)
 
 
 def test_save_day() -> None:
@@ -35,8 +40,7 @@ def test_save_day() -> None:
     Сохраняет один день в csv и проверяет корректность сохраненных данных.
     """
     # Arrange
-    csv_path = r"days_data_test.csv"
-    day_repository = CsvDayRepository(csv_path)
+    day_repository = CsvDayRepository(TEST_CSV_PATH)
 
     day_date_str = "2023-08-10"
     day_date = datetime.strptime(day_date_str, "%Y-%m-%d").date()
@@ -46,15 +50,12 @@ def test_save_day() -> None:
     day_repository.save_day(day_date, day_status)
 
     # Assert
-    with open(csv_path, mode="r", newline='') as f:
+    with open(TEST_CSV_PATH, mode="r", newline='') as f:
         reader = csv.reader(f)
-        headers = reader.__next__()
-        first_row = reader.__next__()
+        header = next(reader)
+        first_row = next(reader)
         assert (day_date_str == first_row[0])
         assert (day_status == int(first_row[1]))
-
-    # Clean
-    os.remove(csv_path)
 
 
 def test_get_all():
@@ -62,7 +63,6 @@ def test_get_all():
     Записывает несколько строк, затем получает все данные и сверяет с записанным.
     """
     # Arrange
-    csv_path = r"days_data_test.csv"
     test_dates_str = ["2023-08-10", "2023-09-10", "2023-10-10", "2023-11-10"]
     test_dates = []
     for date_str in test_dates_str:
@@ -71,7 +71,7 @@ def test_get_all():
 
     test_statuses = [1, 0, -1, 1]
 
-    day_repository = CsvDayRepository(csv_path)
+    day_repository = CsvDayRepository(TEST_CSV_PATH)
 
     for i in range(len(test_dates)):
         day_date = test_dates[i]
@@ -84,6 +84,3 @@ def test_get_all():
     # Assert
     assert (test_dates == all_data[0])
     assert (test_statuses == all_data[1])
-
-    # Clean
-    os.remove(csv_path)
