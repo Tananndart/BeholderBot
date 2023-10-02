@@ -4,7 +4,6 @@ import pytest
 from datetime import datetime, date
 from repository.csv_day_repository import CsvDayRepository
 
-
 TEST_CSV_PATH = r"days_data_test.csv"
 
 
@@ -89,7 +88,7 @@ def test_save_day_if_day_already_exist() -> None:
                 already_save_day_find = True
                 assert (new_save_day[1] == int(row[1]))
 
-    assert already_save_day
+    assert already_save_day_find
 
 
 def test_get_all():
@@ -100,7 +99,7 @@ def test_get_all():
     test_dates_str = ["2023-08-10", "2023-09-10", "2023-10-10", "2023-11-10"]
     test_dates = []
     for date_str in test_dates_str:
-        test_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        test_date = _to_date(date_str)
         test_dates.append(test_date)
 
     test_statuses = [1, 0, -1, 1]
@@ -118,3 +117,25 @@ def test_get_all():
     # Assert
     assert (test_dates == all_data[0])
     assert (test_statuses == all_data[1])
+
+
+def test_exist_day():
+    """
+    Добавляет несколько дней со статусами в csv и затем проверяет метод репозитория exist_day.
+    """
+    # Arrange
+    test_datas = [("2023-08-10", 1), ("2023-09-11", 0), ("2023-10-01", -1)]
+
+    day_repository = CsvDayRepository(TEST_CSV_PATH)
+    for test_data in test_datas:
+        day_date = _to_date(test_data[0])
+        day_status = test_data[1]
+        day_repository.save_day(day_date, day_status)
+
+    # Act
+    is_exist_day = day_repository.exist_day(_to_date("2023-09-11"))
+    is_not_exist_day = day_repository.exist_day(_to_date("2024-09-11"))
+
+    # Assert
+    assert is_exist_day
+    assert not is_not_exist_day

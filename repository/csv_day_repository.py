@@ -46,3 +46,19 @@ class CsvDayRepository(DayRepository):
                 statuses.append(day_status)
 
         return [dates, statuses]
+
+    def exist_day(self, day_date: date) -> bool:
+        with open(self.csv_file_path, "r", newline='') as file:
+            reader = csv.reader(file)
+            next(reader)
+
+            for row in reader:
+                current_day_date = datetime.strptime(row[0], "%Y-%m-%d").date()
+                if current_day_date == day_date:
+                    return True
+
+        return False
+
+    @staticmethod
+    def _str_to_date(date_str: str):
+        return datetime.strptime(date_str, "%Y-%m-%d").date()

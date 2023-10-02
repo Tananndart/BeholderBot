@@ -1,6 +1,6 @@
-from aiogram import Bot, Router
+from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 
 from repository.repository_factory import get_day_repository
 
@@ -29,3 +29,18 @@ async def handle_day(message: Message):
 @day_router.message(Command("day_bad"))
 async def handle_day(message: Message):
     await _day_handler(message, -1)
+
+
+@day_router.callback_query(F.data.in_(['good_day_callback']))
+async def process_buttons_press(callback: CallbackQuery):
+    await _day_handler(callback.message, 1)
+
+
+@day_router.callback_query(F.data.in_(['norm_day_callback']))
+async def process_buttons_press(callback: CallbackQuery):
+    await _day_handler(callback.message, 0)
+
+
+@day_router.callback_query(F.data.in_(['bad_day_callback']))
+async def process_buttons_press(callback: CallbackQuery):
+    await _day_handler(callback.message, -1)

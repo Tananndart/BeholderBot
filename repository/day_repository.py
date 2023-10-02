@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from datetime import date
+from datetime import date, datetime
 from typing import List, Any
 
 
@@ -10,4 +10,8 @@ class DayRepository(ABC):
 
     @abstractmethod
     def get_all(self, with_headers: bool = False) -> List[List[Any]]:
+        pass
+
+    @abstractmethod
+    def exist_day(self, day_date: date) -> bool:
         pass
