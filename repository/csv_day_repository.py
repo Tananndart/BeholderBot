@@ -39,7 +39,7 @@ class CsvDayRepository(DayRepository):
                 next(reader)
 
             for row in reader:
-                day_date = datetime.strptime(row[0], "%Y-%m-%d").date()
+                day_date = self._str_to_date(row[0])
                 day_status = int(row[1])
 
                 dates.append(day_date)
@@ -53,7 +53,7 @@ class CsvDayRepository(DayRepository):
             next(reader)
 
             for row in reader:
-                current_day_date = datetime.strptime(row[0], "%Y-%m-%d").date()
+                current_day_date = self._str_to_date(row[0])
                 if current_day_date == day_date:
                     return True
 
