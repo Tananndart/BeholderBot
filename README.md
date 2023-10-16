@@ -4,6 +4,42 @@
 
 Нужен для сбора личной статистики.
 
+## Install linux
+
+Тестировалось на python 3.10 и 3.11
+
+1. Склонировать репозиторий в рабочую директорию бота
+2. Создать виртуальное окружение:
+   - `python3 -m venv /path/to/bot/venv`
+   - `source /path/to/bot/venv/bin/acivate`
+   - `python3 -m pip install -r /path/to/bot/requirments.txt`
+   - `deactivate`
+2. Перейти в `/etc/systemd/system/`
+3. Создать файл `beholder_bot.service`
+4. В файле прописать:
+```
+[Unit]
+Description=Beholder Bot Python
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c 'source /path/to/bot/venv/bin/activate && python3 /path/to/bot/main.py'
+WorkingDirectory=/path/to/bot
+Restart=always
+User=root
+Environment="BOT_TOKEN=<>"
+Environment="BOT_CHAT_ID=<>"
+Environment="BOT_REMINDER_DAY_TIME=23:00"
+Environment="BOT_DATA_PATH=/home/data"
+
+[Install]
+WantedBy=multi-user.target
+```
+6. Сохранить и закрыть файл.
+7. Обновить конфигурацию служб:
+   - `sudo systemctl daemon-reload`
+8. Перезапустить службу:
+   - `sudo systemctl restart beholder_bot.service`
 
 ## Статусы дней
 
