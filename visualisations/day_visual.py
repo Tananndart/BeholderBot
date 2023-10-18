@@ -13,8 +13,6 @@ class DayVisual:
 
         plt.set_loglevel('WARNING')
         plt.plot(formatted_dates, calculated_statuses)
-        plt.xlabel("Date")
-        plt.ylabel("Status")
         plt.title("Status over Time")
 
         for i in range(len(formatted_dates)):

@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import sys
 
 from aiogram.enums import ParseMode
 
@@ -19,12 +18,14 @@ async def main() -> None:
     dp.include_router(day_router)
     dp.include_router(graph_router)
 
-    asyncio.ensure_future(reminder.start(bot, BOT_REMINDER_DAY_TIME))
+    logging.info(f"Start reminder by {BOT_REMINDER_DAY_TIME}")
+    asyncio.ensure_future(reminder.start(BOT_TOKEN, BOT_REMINDER_DAY_TIME))
 
+    logging.info(f"Start bot pooling")
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
