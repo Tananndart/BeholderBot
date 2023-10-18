@@ -8,19 +8,17 @@ import matplotlib.pyplot as plt
 class DayVisual:
     @staticmethod
     def visualise(dates: List[date], statuses: List[int]) -> bytes:
-        calculated_statuses = []
-        value = 0
-        for status in statuses:
-            value += status
-            calculated_statuses.append(value)
+        calculated_statuses = [sum(statuses[:i + 1]) for i in range(len(statuses))]
+        formatted_dates = [d.strftime("%d-%m-%Y") for d in dates]
 
-        plt.plot(dates, calculated_statuses)
+        plt.set_loglevel('WARNING')
+        plt.plot(formatted_dates, calculated_statuses)
         plt.xlabel("Date")
         plt.ylabel("Status")
         plt.title("Status over Time")
 
-        for i in range(len(dates)):
-            plt.scatter(dates[i], calculated_statuses[i], color='black', marker='o')
+        for i in range(len(formatted_dates)):
+            plt.scatter(formatted_dates[i], calculated_statuses[i], color='black', marker='o')
 
         plt.xticks(rotation=90)
         plt.tight_layout()
