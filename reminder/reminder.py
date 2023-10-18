@@ -6,7 +6,7 @@ from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-from env import BOT_CHAT_ID, BOT_TOKEN
+from env import BOT_CHAT_ID
 from repository.repository_factory import get_day_repository
 
 
@@ -36,6 +36,8 @@ async def send_current_day_status(bot: Bot, status: int):
 async def check(bot: Bot, remind_time: str, max_delay_sec: int):
     while True:
         current_time = datetime.now().strftime("%H:%M")
+        logging.debug(f"Reminder check {current_time} == {remind_time}")
+
         if current_time == remind_time:
             logging.info(f"Reminder check {current_time}")
 
@@ -58,5 +60,6 @@ async def start(bot_token: str, remind_time: str, max_delay_sec: int = 60):
     if delay == max_delay_sec:
         delay = 0
 
+    logging.info(f"Start reminder at time: {remind_time}, max_delay_sec: {max_delay_sec}")
     await asyncio.sleep(delay)
     await check(bot, remind_time, max_delay_sec)

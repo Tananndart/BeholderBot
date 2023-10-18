@@ -3,7 +3,7 @@ import logging
 
 from aiogram.enums import ParseMode
 
-from env import BOT_TOKEN, BOT_REMINDER_DAY_TIME
+from env import BOT_TOKEN, BOT_REMINDER_DAY_TIME, LOG_LEVEL
 from handlers.day_handler import day_router
 from handlers.graph_handler import graph_router
 
@@ -26,6 +26,6 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
+    logging.basicConfig(filename='app.log', level=LOG_LEVEL, format='%(asctime)s %(levelname)s: %(message)s')
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
