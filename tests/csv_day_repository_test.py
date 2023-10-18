@@ -119,12 +119,13 @@ def test_get_all():
     assert (test_statuses == all_data[1])
 
 
-def test_exist_day():
+def test_get_status_day():
     """
-    Добавляет несколько дней со статусами в csv и затем проверяет метод репозитория exist_day.
+    Получает статус существующего дня, и получает статус несуществующего дня (None).
     """
     # Arrange
     test_datas = [("2023-08-10", 1), ("2023-09-11", 0), ("2023-10-01", -1)]
+    exist_day = test_datas[1]
 
     day_repository = CsvDayRepository(TEST_CSV_PATH)
     for test_data in test_datas:
@@ -133,9 +134,9 @@ def test_exist_day():
         day_repository.save_day(day_date, day_status)
 
     # Act
-    is_exist_day = day_repository.exist_day(_to_date("2023-09-11"))
-    is_not_exist_day = day_repository.exist_day(_to_date("2024-09-11"))
+    status_exist_day = day_repository.get_status_day(_to_date(exist_day[0]))
+    status_not_exist_day = day_repository.get_status_day(_to_date("2024-09-11"))
 
     # Assert
-    assert is_exist_day
-    assert not is_not_exist_day
+    assert status_exist_day == exist_day[1]
+    assert status_not_exist_day is None

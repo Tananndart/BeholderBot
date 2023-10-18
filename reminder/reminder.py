@@ -17,13 +17,29 @@ async def send_remind(bot: Bot):
     await bot.send_message(BOT_CHAT_ID, f"Как прошел день?", reply_markup=day_status_keyboard)
 
 
+async def send_current_day_status(bot: Bot, status: int):
+    status_from_user = "непонятно..."
+    if status == 1:
+        status_from_user = "отлично!"
+    elif status == 0:
+        status_from_user = "нормально!"
+    elif status == -1:
+        status_from_user = "плохо!"
+
+    await bot.send_message(BOT_CHAT_ID, f"Твой день прошел {status_from_user}")
+
+
 async def check(bot: Bot, remind_time: str, max_delay_sec: int):
     while True:
         current_time = datetime.now().strftime("%H:%M")
         if current_time == remind_time:
             current_date = datetime.now().date()
-            if not get_day_repository().exist_day(current_date):
+            current_status = get_day_repository().get_status_day(current_date)
+            if current_status:
+                await send_current_day_status(bot, current_status)
+            else:
                 await send_remind(bot)
+
         await asyncio.sleep(max_delay_sec)
 
 

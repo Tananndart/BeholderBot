@@ -1,7 +1,7 @@
 import csv
 import os
 from datetime import date, datetime
-from typing import List, Any
+from typing import List, Any, Union
 import pandas as pd
 
 from repository.day_repository import DayRepository
@@ -47,7 +47,7 @@ class CsvDayRepository(DayRepository):
 
         return [dates, statuses]
 
-    def exist_day(self, day_date: date) -> bool:
+    def get_status_day(self, day_date: date) -> Union[int, None]:
         with open(self.csv_file_path, "r", newline='') as file:
             reader = csv.reader(file)
             next(reader)
@@ -55,9 +55,10 @@ class CsvDayRepository(DayRepository):
             for row in reader:
                 current_day_date = self._str_to_date(row[0])
                 if current_day_date == day_date:
-                    return True
+                    day_status = int(row[1])
+                    return day_status
 
-        return False
+        return None
 
     @staticmethod
     def _str_to_date(date_str: str):

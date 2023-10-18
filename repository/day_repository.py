@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from datetime import date, datetime
-from typing import List, Any
+from datetime import date
+from typing import List, Any, Union
 
 
 class DayRepository(ABC):
@@ -13,5 +13,5 @@ class DayRepository(ABC):
         pass
 
     @abstractmethod
-    def exist_day(self, day_date: date) -> bool:
+    def get_status_day(self, day_date: date) -> Union[int, None]:
         pass
