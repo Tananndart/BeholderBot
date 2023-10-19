@@ -4,4 +4,4 @@ from repository.day_repository import DayRepository
 
 
 def get_day_repository() -> DayRepository:
-    return CsvDayRepository(BOT_DATA_PATH + "\\day_data.csv")
+    return CsvDayRepository(BOT_DATA_PATH + r"/day_data.csv")

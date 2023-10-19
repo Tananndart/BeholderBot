@@ -1,10 +1,10 @@
 from os import getenv
 
-BOT_TOKEN = getenv("BOT_TOKEN")                         # уникальный токен доступа бота
-BOT_DATA_PATH = getenv("BOT_DATA_PATH")                 # папка для хранения данных бота
-BOT_CHAT_ID = getenv("BOT_CHAT_ID")                     # идентификатор чата с ботом
-BOT_REMINDER_DAY_TIME = getenv("BOT_REMINDER_TIME")     # время вопроса бота о статусе дня, например "23:00"
-LOG_LEVEL = getenv("LOG_LEVEL")
+BOT_TOKEN = str(getenv("BOT_TOKEN"))
+BOT_DATA_PATH = str(getenv("BOT_DATA_PATH"))
+BOT_CHAT_ID = str(getenv("BOT_CHAT_ID"))
+BOT_REMINDER_DAY_TIME = str(getenv("BOT_REMINDER_TIME"))
+LOG_LEVEL = int(getenv("LOG_LEVEL"))
 
 '''
 log levels:
