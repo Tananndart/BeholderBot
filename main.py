@@ -3,7 +3,7 @@ import logging
 
 from aiogram.enums import ParseMode
 
-from env import BOT_TOKEN, BOT_REMINDER_DAY_TIME, LOG_LEVEL
+from env import BOT_TOKEN, BOT_REMINDER_TIME, LOG_LEVEL
 from handlers.day_handler import day_router
 from handlers.graph_handler import graph_router
 
@@ -18,8 +18,8 @@ async def main() -> None:
     dp.include_router(day_router)
     dp.include_router(graph_router)
 
-    logging.info(f"Start reminder by {BOT_REMINDER_DAY_TIME}")
-    asyncio.ensure_future(reminder.start(BOT_TOKEN, BOT_REMINDER_DAY_TIME))
+    logging.info(f"Start reminder by {BOT_REMINDER_TIME}")
+    asyncio.ensure_future(reminder.start(BOT_TOKEN, BOT_REMINDER_TIME))
 
     logging.info(f"Start bot pooling")
     await dp.start_polling(bot)

@@ -3,7 +3,7 @@ from os import getenv
 BOT_TOKEN = str(getenv("BOT_TOKEN"))
 BOT_DATA_PATH = str(getenv("BOT_DATA_PATH"))
 BOT_CHAT_ID = str(getenv("BOT_CHAT_ID"))
-BOT_REMINDER_DAY_TIME = str(getenv("BOT_REMINDER_TIME"))
+BOT_REMINDER_TIME = str(getenv("BOT_REMINDER_TIME"))
 LOG_LEVEL = int(getenv("LOG_LEVEL"))
 
 '''
