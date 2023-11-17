@@ -16,16 +16,14 @@ async def handle_graph(message: Message) -> None:
     logging.info("Call graph command")
 
     days_repository = get_day_repository()
-    all_data = days_repository.get_all()
-    dates = all_data[0]
-    statuses = all_data[1]
+    all_days = days_repository.get_all()
 
-    if not dates or not statuses:
+    if not all_days:
         logging.info("Graph command not found data from create graph")
         await message.reply("Нет данных для построения графика")
         return
 
-    image_bytes = DayVisual.visualise(dates, statuses)
+    image_bytes = DayVisual.visualise(all_days)
     image_input_file = BufferedInputFile(image_bytes, "graph.png")
 
     logging.info("Graph command create and send graph")

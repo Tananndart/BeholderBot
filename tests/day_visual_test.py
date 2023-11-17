@@ -26,12 +26,10 @@ def test_visual_day():
     """
     # Arrange
     day_repository = CsvDayRepository(TEST_CSV_PATH)
-    all_data = day_repository.get_all()
-    dates = all_data[0]
-    statuses = all_data[1]
+    all_days = day_repository.get_all()
 
     # Act
-    image_data = DayVisual.visualise(dates, statuses)
+    image_data = DayVisual.visualise(all_days)
 
     # Assert
     try:

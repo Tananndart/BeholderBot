@@ -6,6 +6,7 @@ from aiogram import Bot
 from aiogram.enums import ParseMode
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from domain.day import DayStatus
 from env import BOT_CHAT_ID
 from repository.repository_factory import get_day_repository
 
@@ -20,16 +21,10 @@ async def send_remind(bot: Bot):
     await bot.send_message(BOT_CHAT_ID, f"Как прошел день?", reply_markup=day_status_keyboard)
 
 
-async def send_current_day_status(bot: Bot, status: int):
-    status_from_user = "непонятно..."
-    if status == 1:
-        status_from_user = "отлично!"
-    elif status == 0:
-        status_from_user = "нормально!"
-    elif status == -1:
-        status_from_user = "плохо!"
-
+async def send_current_day_status(bot: Bot, status: DayStatus):
     logging.info(f"Reminder send message about current day status {status}")
+
+    status_from_user = str(status)
     await bot.send_message(BOT_CHAT_ID, f"Твой день прошел {status_from_user}")
 
 

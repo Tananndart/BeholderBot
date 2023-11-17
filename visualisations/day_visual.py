@@ -4,10 +4,15 @@ from typing import List
 
 import matplotlib.pyplot as plt
 
+from domain.day import Day
+
 
 class DayVisual:
     @staticmethod
-    def visualise(dates: List[date], statuses: List[int]) -> bytes:
+    def visualise(days: List[Day]) -> bytes:
+        dates = [day.date for day in days]
+        statuses = [day.status.value for day in days]
+
         calculated_statuses = [sum(statuses[:i + 1]) for i in range(len(statuses))]
         formatted_dates = [d.strftime("%d-%m-%Y") for d in dates]
 
