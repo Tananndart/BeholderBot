@@ -1,5 +1,4 @@
 import io
-from datetime import date
 from typing import List
 
 import matplotlib.pyplot as plt

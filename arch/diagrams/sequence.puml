@@ -1,0 +1,64 @@
+@startuml
+
+actor User as User
+participant Bot as Bot
+participant Reminder as Reminder
+participant Repository as Rep
+participant Graph as Graph
+
+group User add bot and set reminder time
+  User -> Bot: /start
+  Bot -> User: request reminder time
+  User -> Bot: reminder time
+  Bot -> Rep: save [user_id, reminder_time]
+  Rep-> Rep: save
+end
+
+group User save day status
+  User -> Bot: send day status
+  Bot -> Rep: save day status
+  Rep-> Rep: save
+  Bot -> User: day status saved
+end
+
+group User request graph by all days
+  User -> Bot: get graph all days
+  Bot -> Rep: get all days
+  Rep-> Bot: all days
+  Bot -> Graph: get graph (days)
+  Graph -> Bot: graph as image
+  Bot -> User: send graph as image
+end
+
+group User not save day status until remind time
+  loop every 60 sec
+    Reminder -> Rep: get all [user_id, remind_time]
+    Rep -> Reminder: all [user_id, remind_time]
+    Reminder -> Reminder: check remind_time = true
+  end
+
+  Reminder -> Bot: disable all past reminds
+  Bot -> User: disable all past reminds
+  Reminder -> Rep: check saved current day
+
+  alt User not save day
+    Rep -> Reminder: current day not saved
+    Reminder -> Bot: send remind on day status
+    Bot -> User: send remind on day status
+    User -> Bot: reply day status on remind
+    note left
+      if user not reply
+      then remind will be
+      disabled before next
+      remind
+    end note
+    Bot -> Reminder: reply day status on remind
+    Reminder -> Rep: save day status
+  else User save day
+    Rep -> Reminder: current day saved
+    Reminder -> Bot: send saved status day
+    Bot -> User: send saved status day
+  end
+end
+
+@enduml
