@@ -3,7 +3,6 @@ import logging
 from datetime import datetime
 
 from aiogram import Bot
-from aiogram.enums import ParseMode
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from domain.day import DayStatus
@@ -47,9 +46,7 @@ async def check(bot: Bot, remind_time: str, max_delay_sec: int):
         await asyncio.sleep(max_delay_sec)
 
 
-async def start(bot_token: str, remind_time: str, max_delay_sec: int = 60):
-    bot = Bot(bot_token, parse_mode=ParseMode.HTML)
-
+async def start(bot: Bot, remind_time: str, max_delay_sec: int = 60):
     current_sec = int(datetime.now().strftime("%S"))
     delay = max_delay_sec - current_sec
     if delay == max_delay_sec:
